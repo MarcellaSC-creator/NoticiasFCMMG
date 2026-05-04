@@ -1,4 +1,4 @@
-cconst API_URL =
+const API_URL =
   "https://script.google.com/macros/s/AKfycbxvi0Re1-5Ws6U4Xtu-DLpHLqrhyGwS8ZTGhZGX59OvwH5tinKCvBcmZbBmday284R2/exec";
 
 let todasNoticias = [];
@@ -64,18 +64,41 @@ async function carregarRanking() {
 
     rankingVeiculos = Array.isArray(data) ? data : [];
 
-    renderizarRanking(rankingVeiculos);
+   function renderizarRanking(ranking) {
+  const container = document.getElementById("rankingContainer");
 
-  } catch (error) {
-    console.error(error);
-    container.innerHTML = `
-      <div class="error">
-        Erro ao carregar ranking.
-      </div>
-    `;
+  if (!ranking || ranking.length === 0) {
+    container.innerHTML = "<p>Nenhum dado de ranking disponível.</p>";
+    return;
   }
-}
 
+  container.innerHTML = `
+    <table class="ranking-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Veículo</th>
+          <th>Total</th>
+          <th>Positivas</th>
+          <th>Neutras</th>
+          <th>Negativas</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${ranking.map((item, index) => `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${item.fonte || "-"}</td>
+            <td>${item.total || 0}</td>
+            <td>${item.positivas || 0}</td>
+            <td>${item.neutras || 0}</td>
+            <td>${item.negativas || 0}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+}
 function aplicarFiltros() {
   const termo = document.getElementById("searchInput").value.toLowerCase().trim();
   const sentimento = document.getElementById("sentimentFilter").value.toLowerCase();
