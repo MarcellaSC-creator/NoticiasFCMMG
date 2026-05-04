@@ -40,7 +40,7 @@ async function carregarNoticias() {
     aplicarFiltros();
 
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao carregar notícias:", error);
     container.innerHTML = `
       <div class="error">
         Erro ao carregar notícias. Verifique se a API do Apps Script está publicada corretamente.
@@ -64,41 +64,18 @@ async function carregarRanking() {
 
     rankingVeiculos = Array.isArray(data) ? data : [];
 
-   function renderizarRanking(ranking) {
-  const container = document.getElementById("rankingContainer");
+    renderizarRanking(rankingVeiculos);
 
-  if (!ranking || ranking.length === 0) {
-    container.innerHTML = "<p>Nenhum dado de ranking disponível.</p>";
-    return;
+  } catch (error) {
+    console.error("Erro ao carregar ranking:", error);
+    container.innerHTML = `
+      <div class="error">
+        Erro ao carregar ranking. Verifique a rota ?action=ranking da API.
+      </div>
+    `;
   }
-
-  container.innerHTML = `
-    <table class="ranking-table">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Veículo</th>
-          <th>Total</th>
-          <th>Positivas</th>
-          <th>Neutras</th>
-          <th>Negativas</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${ranking.map((item, index) => `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${item.fonte || "-"}</td>
-            <td>${item.total || 0}</td>
-            <td>${item.positivas || 0}</td>
-            <td>${item.neutras || 0}</td>
-            <td>${item.negativas || 0}</td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
-  `;
 }
+
 function aplicarFiltros() {
   const termo = document.getElementById("searchInput").value.toLowerCase().trim();
   const sentimento = document.getElementById("sentimentFilter").value.toLowerCase();
@@ -184,11 +161,9 @@ function renderizarRanking(ranking) {
   const container = document.getElementById("rankingContainer");
 
   if (!ranking || ranking.length === 0) {
-    container.innerHTML = `<div class="empty">Ranking ainda não disponível.</div>`;
+    container.innerHTML = `<div class="empty">Nenhum dado de ranking disponível.</div>`;
     return;
   }
-
-  const topRanking = ranking.slice(0, 10);
 
   container.innerHTML = `
     <table class="ranking-table">
@@ -203,10 +178,10 @@ function renderizarRanking(ranking) {
         </tr>
       </thead>
       <tbody>
-        ${topRanking.map((item, index) => `
+        ${ranking.map((item, index) => `
           <tr>
             <td>${index + 1}</td>
-            <td>${escaparHTML(item.fonte || "Fonte não identificada")}</td>
+            <td>${escaparHTML(item.fonte || "-")}</td>
             <td>${item.total || 0}</td>
             <td>${item.positivas || 0}</td>
             <td>${item.neutras || 0}</td>
