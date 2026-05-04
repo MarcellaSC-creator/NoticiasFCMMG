@@ -3,41 +3,92 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Radar de Notícias Online</title>
+  <title>Radar de Notícias | FCM-MG</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
   <main>
-
     <header class="header">
       <div class="logo-container">
-        <img
-          src="logo-fcmmg-feluma.png"
-          alt="FCMMG e Feluma"
-          class="logo"
-        />
+        <img src="logo-fcmmg-feluma.png" alt="FCMMG e Feluma" class="logo" />
       </div>
 
       <div class="header-text">
-        <h1>Radar de Notícias Online</h1>
-        <p>Sistema Feluma e Institutos Ciências Médicas</p>
+        <h1>Radar de Notícias</h1>
+        <p>Faculdade Ciências Médicas de Minas Gerais</p>
       </div>
     </header>
+
+    <section class="summary-grid">
+      <div class="summary-card">
+        <span>Total de notícias</span>
+        <strong id="totalNoticias">0</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Positivas</span>
+        <strong id="totalPositivas">0</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Neutras</span>
+        <strong id="totalNeutras">0</strong>
+      </div>
+
+      <div class="summary-card">
+        <span>Negativas</span>
+        <strong id="totalNegativas">0</strong>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Ranking de veículos</h2>
+        <p>Veículos que mais citaram a instituição</p>
+      </div>
+
+      <div id="rankingContainer" class="ranking-container">
+        <p>Carregando ranking...</p>
+      </div>
+    </section>
 
     <section class="filters">
       <input
         type="text"
         id="searchInput"
-        placeholder="Buscar por título, fonte ou palavra-chave..."
+        placeholder="Buscar por título, fonte, categoria, sentimento ou palavra-chave..."
       />
-      <button onclick="carregarNoticias()">Atualizar</button>
+
+      <select id="sentimentFilter">
+        <option value="">Todos os sentimentos</option>
+        <option value="positivo">Positivo</option>
+        <option value="neutro">Neutro</option>
+        <option value="negativo">Negativo</option>
+      </select>
+
+      <select id="categoryFilter">
+        <option value="">Todas as categorias</option>
+        <option value="ensino">Ensino</option>
+        <option value="pesquisa">Pesquisa</option>
+        <option value="hospital/saúde">Hospital/Saúde</option>
+        <option value="evento">Evento</option>
+        <option value="institucional">Institucional</option>
+        <option value="outros">Outros</option>
+      </select>
+
+      <button id="refreshButton">Atualizar</button>
     </section>
 
-    <section id="newsContainer" class="news-container">
-      <p>Carregando notícias...</p>
-    </section>
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Notícias captadas</h2>
+        <p>Organizadas da mais nova para a mais antiga</p>
+      </div>
 
+      <section id="newsContainer" class="news-container">
+        <p>Carregando notícias...</p>
+      </section>
+    </section>
   </main>
 
   <script src="script.js"></script>
