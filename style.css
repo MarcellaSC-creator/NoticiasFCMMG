@@ -11,23 +11,35 @@ main {
   padding: 32px 20px;
 }
 
-header {
-  background: #003366;
+/* HEADER */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #0056a3; /* azul FELUMA */
   color: white;
-  padding: 28px;
+  padding: 24px;
   border-radius: 16px;
   margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
-header h1 {
+.logo {
+  height: 60px;
+}
+
+.header-text h1 {
   margin: 0;
-  font-size: 32px;
+  font-size: 28px;
 }
 
-header p {
-  margin: 8px 0 0;
-  font-size: 18px;
+.header-text p {
+  margin: 4px 0 0;
+  font-size: 16px;
 }
+
+/* FILTRO */
 
 .filters {
   display: flex;
@@ -46,10 +58,13 @@ button {
   padding: 14px 20px;
   border: none;
   border-radius: 10px;
-  background: #003366;
+  background: #0056a3;
   color: white;
   cursor: pointer;
+  font-weight: bold;
 }
+
+/* CARDS */
 
 .news-card {
   background: white;
@@ -64,13 +79,27 @@ button {
   font-size: 20px;
 }
 
+.meta {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
 .news-card a {
-  color: #003366;
+  color: #0056a3;
   font-weight: bold;
 }
 
-.meta {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 12px;
+/* RESPONSIVO */
+
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .logo {
+    height: 50px;
+  }
 }
