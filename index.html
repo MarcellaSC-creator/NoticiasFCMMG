@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monitor de Notícias - FCM-MG</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Monitor de Notícias</h1>
+      <p>Faculdade Ciências Médicas de Minas Gerais</p>
+    </header>
+
+    <section class="filters">
+      <input type="text" id="searchInput" placeholder="Buscar por título, fonte ou palavra-chave..." />
+      <button onclick="carregarNoticias()">Atualizar</button>
+    </section>
+
+    <section id="newsContainer" class="news-container">
+      <p>Carregando notícias...</p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
