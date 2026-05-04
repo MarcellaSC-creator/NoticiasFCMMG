@@ -22,151 +22,66 @@ async function carregarNoticias() {
     renderizarNoticias(todasNoticias);
 
   } catch (error) {
-    console.error("Erro completo:", error);
-
-    container.innerHTML = `
-      <p>Erro ao carregar notícias.</p>
-      <small>Verifique se a API do Apps Script está publicada corretamente.</small>
-    `;
+    console.error(error);
+    container.innerHTML = "<p>Erro ao carregar notícias.</p>";
   }
 }
 
 function renderizarNoticias(noticias) {
   const container = document.getElementById("newsContainer");
 
-  if (!noticias || noticias.length === 0) {
+  if (!noticias.length) {
     container.innerHTML = "<p>Nenhuma notícia encontrada.</p>";
     return;
   }
 
-  container.innerHTML = noticias
-    .map(noticia => `
-      <article class="news-card">
-        <h2>${escaparHTML(noticia.titulo || "Sem título")}</h2>
+  container.innerHTML = noticias.map(n => `
+    <article class="news-card">
+      <h2>${n.titulo || "Sem título"}</h2>
 
-        <div class="meta">
-          <strong>Data da notícia:</strong> ${formatarDataBr(noticia.dataNoticia)}<br>
-          <strong>Fonte:</strong> ${escaparHTML(noticia.fonte || "Não identificada")}<br>
-          <strong>Gatilho:</strong> ${escaparHTML(noticia.palavraChave || "-")}<br>
-          <strong>Status:</strong> ${escaparHTML(noticia.status || "-")}
-        </div>
+      <div class="meta">
+        <strong>Data:</strong> ${formatarData(n.dataNoticia)}<br>
+        <strong>Fonte:</strong> ${n.fonte || "Não identificada"}<br>
+        <strong>Gatilho:</strong> ${n.palavraChave || "-"}
+      </div>
 
-        ${noticia.resumo ? `<p>${escaparHTML(noticia.resumo)}</p>` : ""}
+      ${n.resumo ? `<p>${n.resumo}</p>` : ""}
 
-        <a href="${noticia.link || "#"}" target="_blank" rel="noopener noreferrer">
-          Acessar notícia
-        </a>
-      </article>
-    `)
-    .join("");
+      <a href="${n.link}" target="_blank">
+        Acessar notícia
+      </a>
+    </article>
+  `).join("");
 }
 
-function ordenarNoticias(noticias) {
-  noticias.sort((a, b) => {
-    const dataA = converterData(a.dataNoticia);
-    const dataB = converterData(b.dataNoticia);
-
-    return dataB - dataA;
+function ordenarNoticias(lista) {
+  lista.sort((a, b) => {
+    return new Date(b.dataNoticia) - new Date(a.dataNoticia);
   });
 }
 
-function converterData(data) {
-  if (!data) return 0;
+function formatarData(data) {
+  if (!data) return "-";
 
-  if (data instanceof Date) {
-    return data.getTime();
-  }
+  const d = new Date(data);
 
-  const texto = String(data).trim();
+  if (isNaN(d)) return data;
 
-  let d = new Date(texto);
+  return d.toLocaleDateString("pt-BR");
+}
 
-  if (!isNaN(d.getTime())) {
-    return d.getTime();
-  }
+document.getElementById("searchInput").addEventListener("input", function () {
+  const termo = this.value.toLowerCase();
 
-  const match = texto.match(
-    /^(\d{4})-(\d{2})-(\d{2})(?:\s+(\d{2}):(\d{2})(?::(\d{2}))?)?$/
+  const filtradas = todasNoticias.filter(n =>
+    (n.titulo || "").toLowerCase().includes(termo) ||
+    (n.fonte || "").toLowerCase().includes(termo) ||
+    (n.palavraChave || "").toLowerCase().includes(termo) ||
+    (n.resumo || "").toLowerCase().includes(termo)
   );
-
-  if (match) {
-    const [, ano, mes, dia, hora = "00", minuto = "00", segundo = "00"] = match;
-
-    d = new Date(
-      Number(ano),
-      Number(mes) - 1,
-      Number(dia),
-      Number(hora),
-      Number(minuto),
-      Number(segundo)
-    );
-
-    return d.getTime();
-  }
-
-  return 0;
-}
-
-function formatarDataBr(data) {
-  const timestamp = converterData(data);
-
-  if (!timestamp) {
-    return data || "Data não informada";
-  }
-
-  const d = new Date(timestamp);
-
-  return d.toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric"
-  });
-}
-
-function filtrarNoticias() {
-  const input = document.getElementById("searchInput");
-  const termo = input.value.toLowerCase().trim();
-
-  if (!termo) {
-    ordenarNoticias(todasNoticias);
-    renderizarNoticias(todasNoticias);
-    return;
-  }
-
-  const filtradas = todasNoticias.filter(noticia => {
-    const texto = [
-      noticia.titulo,
-      noticia.fonte,
-      noticia.palavraChave,
-      noticia.status,
-      noticia.resumo,
-      noticia.dataNoticia
-    ]
-      .join(" ")
-      .toLowerCase();
-
-    return texto.includes(termo);
-  });
 
   ordenarNoticias(filtradas);
   renderizarNoticias(filtradas);
-}
-
-function escaparHTML(texto) {
-  return String(texto)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const input = document.getElementById("searchInput");
-
-  if (input) {
-    input.addEventListener("input", filtrarNoticias);
-  }
-
-  carregarNoticias();
 });
+
+carregarNoticias();
